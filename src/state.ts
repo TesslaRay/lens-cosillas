@@ -3,7 +3,7 @@ let authenticationToken: string | null = null;
 const setAuthenticationToken = (token: string) => {
   authenticationToken = token;
 
-  console.log("setAuthenticationToken: token", token);
+  //   console.log("setAuthenticationToken: token", token);
 };
 
 const getAuthenticationToken = () => {
