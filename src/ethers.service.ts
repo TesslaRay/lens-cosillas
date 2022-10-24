@@ -1,6 +1,7 @@
-import { ethers, Wallet } from "ethers";
+import { ethers, TypedDataDomain, Wallet } from "ethers";
 
 import { CONFIG } from "./config";
+import { omit } from "./helpers";
 
 const ethersProvider = new ethers.providers.JsonRpcProvider(CONFIG.POLYGON_RPC);
 
@@ -24,4 +25,21 @@ const signText = (text: string) => {
   return signature;
 };
 
-export { ethersProvider, getSigner, getAddressFromSigner, signText };
+const signedTypeData = (
+  domain: TypedDataDomain,
+  types: Record<string, any>,
+  value: Record<string, any>
+) => {
+  const signer = getSigner();
+
+  // remove the __typedname from the signature!
+  return signer._signTypedData(domain, types, value);
+};
+
+export {
+  ethersProvider,
+  getSigner,
+  getAddressFromSigner,
+  signText,
+  signedTypeData,
+};

@@ -1,4 +1,4 @@
-import { getAddressFromSigner } from "../ethers.service";
+import { getAddressFromSigner, signedTypeData } from "../ethers.service";
 
 import { login } from "../authentication/login";
 
@@ -24,15 +24,24 @@ const follow = async (profileId: string = "0x11") => {
 
   await login();
 
-  changeHeaders();
-
+  console.log("\nfollow: Creating follow typed data for profile:", profileId);
   const followTypedData = await createFollowTypedData({
     request: { follow: [{ profile: profileId }] },
   });
 
   // Creating follow typed data for profile
-  console.log("\nfollow: Creating follow typed data for profile:", profileId);
   console.log("follow: typedData", followTypedData.typedData);
+
+  const typedData = followTypedData.typedData;
+
+  console.log("\nfollow: Signing typedData with wallet...");
+  const signature = await signedTypeData(
+    typedData.domain,
+    typedData.types,
+    typedData.value
+  );
+
+  console.log("follow: signature", signature);
 };
 
 (async () => {

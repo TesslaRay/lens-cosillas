@@ -1,6 +1,6 @@
 import { getAddressFromSigner, signText } from "../ethers.service";
 
-import { lensClient } from "../lens-apollo-client";
+import { changeHeaders, lensClient } from "../lens-apollo-client";
 import { Authenticate, GetChallengue } from "../grapql/generated";
 import { ChallengueRequest, SignedAuthChallenge } from "../grapql/lens.types";
 
@@ -53,6 +53,8 @@ const login = async () => {
   console.log("login: authenticationResponse", authenticationResponse);
 
   setAuthenticationToken(authenticationResponse.accessToken);
+
+  changeHeaders();
 
   return authenticationResponse;
 };
