@@ -1,9 +1,14 @@
-import { lensHub } from "./lens-hub";
+import { generateChallenge } from "./authentication/login";
+import { getAddressFromSigner } from "./ethers.service";
 
-const getOwner = async (address: string) => {
-  const response = await lensHub.balanceOf(address);
+const follow = async (profileId: string = "0x11") => {
+  const address = getAddressFromSigner();
 
-  console.log(response);
+  const challengeResponse = await generateChallenge({
+    request: { address },
+  });
+
+  console.log(challengeResponse);
 };
 
-getOwner("0x3aeC2276326CDC8E9a8A4351c338166e67105AC3");
+follow();
