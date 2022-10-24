@@ -1,10 +1,10 @@
-import { lensClient } from "../lens-apollo-client";
-
-import { Authenticate, GetChallengue } from "../grapql/generated";
-
-import { ChallengueRequest, SignedAuthChallenge } from "../grapql/lens.types";
-import { getAuthenticationToken, setAuthenticationToken } from "../state";
 import { getAddressFromSigner, signText } from "../ethers.service";
+
+import { lensClient } from "../lens-apollo-client";
+import { Authenticate, GetChallengue } from "../grapql/generated";
+import { ChallengueRequest, SignedAuthChallenge } from "../grapql/lens.types";
+
+import { getAuthenticationToken, setAuthenticationToken } from "../state";
 
 const generateChallenge = async (request: ChallengueRequest) => {
   const variables: ChallengueRequest = request;
@@ -56,9 +56,5 @@ const login = async () => {
 
   return authenticationResponse;
 };
-
-(async () => {
-  await login();
-})();
 
 export { generateChallenge, login };

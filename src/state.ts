@@ -7,6 +7,10 @@ const setAuthenticationToken = (token: string) => {
 };
 
 const getAuthenticationToken = () => {
+  console.log(
+    "getAuthenticationToken: authenticationToken",
+    authenticationToken
+  );
   return authenticationToken;
 };
 
