@@ -16,4 +16,12 @@ const getAddressFromSigner = () => {
   return address;
 };
 
-export { ethersProvider, getSigner, getAddressFromSigner };
+const signText = (text: string) => {
+  const signer = getSigner();
+
+  const signature = signer.signMessage(text);
+
+  return signature;
+};
+
+export { ethersProvider, getSigner, getAddressFromSigner, signText };
