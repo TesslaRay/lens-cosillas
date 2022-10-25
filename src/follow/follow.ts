@@ -23,7 +23,7 @@ const createFollowTypedData = async (request: FollowRequest) => {
   return createFollowTypedDataResponse.createFollowTypedData;
 };
 
-const follow = async (profileId: string = "0x11") => {
+const followWithSig = async (profileId: string = "0x11") => {
   const address = getAddressFromSigner();
 
   console.log("follow: address", address);
@@ -87,25 +87,39 @@ const follow = async (profileId: string = "0x11") => {
       }
     );
 
-    // const gasEstimated = await lensHub.estimateGas.follow([profileId], [0x0]);
-
-    // const gas = await calcGas(gasEstimated);
-
-    // const followTx = await lensHub.follow([profileId], [0x0], {
-    //   gasLimit: gas.gasLimit,
-    //   maxFeePerGas: gas.maxFeePerGas,
-    //   maxPriorityFeePerGas: gas.maxPriorityFeePerGas,
-    // });
-
     console.log("\nfollow: followTx", followTx);
 
-    // await followTx.wait();
+    await followTx.wait();
 
     return followTx.hash;
   } catch (error) {
     console.log("\nfollow: error", error);
   }
 };
+
+const follow = async (profileId: string = "0x11") => {
+  try {
+    const gasEstimated = await lensHub.estimateGas.follow([profileId], [0x0]);
+
+    const gas = await calcGas(gasEstimated);
+
+    const followTx = await lensHub.follow([profileId], [0x0], {
+      gasLimit: gas.gasLimit,
+      maxFeePerGas: gas.maxFeePerGas,
+      maxPriorityFeePerGas: gas.maxPriorityFeePerGas,
+    });
+
+    console.log("\nfollow: followTx", followTx);
+
+    await followTx.wait();
+  } catch (error) {
+    console.log("\nfollow: error", error);
+  }
+};
+
+// (async () => {
+//   await followWithSig("0x0102cc");
+// })();
 
 (async () => {
   await follow("0x0102cc");

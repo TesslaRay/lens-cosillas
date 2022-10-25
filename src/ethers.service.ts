@@ -2,12 +2,17 @@ import { ethers, TypedDataDomain, Wallet } from "ethers";
 
 import { CONFIG } from "./config";
 
-import axios from "axios";
 import { omit } from "./helpers";
 
-const ethersProvider = new ethers.providers.JsonRpcProvider(CONFIG.POLYGON_RPC);
+import axios from "axios";
+
+import { formatEther } from "./utils";
 
 const getSigner = () => {
+  const ethersProvider = new ethers.providers.JsonRpcProvider(
+    CONFIG.POLYGON_RPC
+  );
+
   const wallet = new Wallet(CONFIG.PK as string, ethersProvider);
 
   return wallet;
@@ -34,11 +39,7 @@ const signedTypeData = (
 ) => {
   const signer = getSigner();
 
-  return signer._signTypedData(
-    omit(domain, "__typename"),
-    omit(types, "__typename"),
-    omit(value, "__typename")
-  );
+  return signer._signTypedData(domain, types, value);
 };
 
 const splitSignature = (signature: string) => {
@@ -47,33 +48,37 @@ const splitSignature = (signature: string) => {
   return { v, r, s };
 };
 
-function parse(data) {
+function parse(data: any) {
   return ethers.utils.parseUnits(Math.ceil(data) + "", "gwei");
 }
 
 const calcGas = async (gasEstimated: ethers.BigNumber) => {
   let gas = {
-    gasLimit: gasEstimated, //.mul(110).div(100)
+    gasLimit: gasEstimated.mul(2000).div(100),
     maxFeePerGas: ethers.BigNumber.from(40000000000),
     maxPriorityFeePerGas: ethers.BigNumber.from(40000000000),
   };
 
   try {
-    const { data } = await axios({
-      method: "get",
-      url: "https://gasstation-mainnet.matic.network/v2",
-    });
+    const { data } = await axios.get(
+      "https://gasstation-mainnet.matic.network/v2"
+    );
+
     gas.maxFeePerGas = parse(data.fast.maxFee);
     gas.maxPriorityFeePerGas = parse(data.fast.maxPriorityFee);
-  } catch (error) {}
+  } catch (error) {
+    console.log("calcGas: error", error);
+  }
 
-  console.log("\ncalGas: gas", gas);
+  console.log("\ncalGas: gas");
+  console.log("gasLimit:             ", formatEther(gas.gasLimit));
+  console.log("maxFeePeerGas:        ", formatEther(gas.maxFeePerGas));
+  console.log("maxPriorityFeePerGas: ", formatEther(gas.maxPriorityFeePerGas));
 
   return gas;
 };
 
 export {
-  ethersProvider,
   getSigner,
   getAddressFromSigner,
   signText,

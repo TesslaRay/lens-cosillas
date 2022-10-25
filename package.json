@@ -9,9 +9,24 @@
     "ethers": "^5.7.2",
     "graphql": "^16.6.0",
     "graphql-request": "^5.0.0",
+    "node-fetch": "^3.2.10",
     "omit-deep": "^0.3.0"
   },
   "devDependencies": {
-    "@types/node": "^18.11.3"
-  }
+    "@types/node": "^18.11.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TesslaRay/lens-cosillas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/TesslaRay/lens-cosillas/issues"
+  },
+  "homepage": "https://github.com/TesslaRay/lens-cosillas#readme",
+  "description": ""
 }
