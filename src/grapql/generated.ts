@@ -660,7 +660,7 @@ const GetProfileFollowing = gql`
 `;
 
 const CreateFollowDataType = gql`
-  mutation ($request: FollowRequest!) {
+  mutation createFollowTypedData($request: FollowRequest!) {
     createFollowTypedData(request: $request) {
       id
       expiresAt
@@ -688,6 +688,39 @@ const CreateFollowDataType = gql`
   }
 `;
 
+const CreatePostTypedData = gql`
+  mutation createPostTypedData($request: CreatePublicPostRequest!) {
+    createPostTypedData(request: $request) {
+      id
+      expiresAt
+      typedData {
+        types {
+          PostWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          name
+          chainId
+          version
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          profileId
+          contentURI
+          collectModule
+          collectModuleInitData
+          referenceModule
+          referenceModuleInitData
+        }
+      }
+    }
+  }
+`;
+
 export {
   GetPing,
   GetChallengue,
@@ -697,4 +730,5 @@ export {
   GetDefaultProfile,
   GetProfileFollowing,
   CreateFollowDataType,
+  CreatePostTypedData,
 };

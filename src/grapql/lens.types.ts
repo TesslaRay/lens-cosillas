@@ -16,3 +16,10 @@ export type FollowRequest = {
     follow: [{ profile: string }];
   };
 };
+
+export type CreatePublicPostRequest = {
+  request: {
+    profileId: string;
+    contentURI: string;
+  };
+};
