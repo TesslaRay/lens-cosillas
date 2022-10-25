@@ -54,7 +54,7 @@ function parse(data: any) {
 
 const calcGas = async (gasEstimated: ethers.BigNumber) => {
   let gas = {
-    gasLimit: gasEstimated.mul(2000).div(100),
+    gasLimit: gasEstimated.mul(110).div(100),
     maxFeePerGas: ethers.BigNumber.from(40000000000),
     maxPriorityFeePerGas: ethers.BigNumber.from(40000000000),
   };

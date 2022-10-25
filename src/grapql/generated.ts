@@ -688,6 +688,34 @@ const CreateFollowDataType = gql`
   }
 `;
 
+const CreateUnfollowTypedData = gql`
+  mutation createUnfollowTypedData($request: UnfollowRequest!) {
+    createUnfollowTypedData(request: $request) {
+      id
+      expiresAt
+      typedData {
+        types {
+          BurnWithSig {
+            name
+            type
+          }
+        }
+        domain {
+          version
+          chainId
+          name
+          verifyingContract
+        }
+        value {
+          nonce
+          deadline
+          tokenId
+        }
+      }
+    }
+  }
+`;
+
 const CreatePostTypedData = gql`
   mutation createPostTypedData($request: CreatePublicPostRequest!) {
     createPostTypedData(request: $request) {
@@ -730,5 +758,6 @@ export {
   GetDefaultProfile,
   GetProfileFollowing,
   CreateFollowDataType,
+  CreateUnfollowTypedData,
   CreatePostTypedData,
 };

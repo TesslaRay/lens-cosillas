@@ -17,6 +17,12 @@ export type FollowRequest = {
   };
 };
 
+export type UnfollowRequest = {
+  request: {
+    profile: string;
+  };
+};
+
 export type CreatePublicPostRequest = {
   request: {
     profileId: string;
