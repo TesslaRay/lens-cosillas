@@ -91,7 +91,7 @@ const followWithSig = async (profileId: string = "0x11") => {
 
     await followTx.wait();
 
-    console.log('\nfollow: Profile followed: "', profileId, '"');
+    console.log('\nfollow: Successfully followed: "', profileId);
 
     return followTx.hash;
   } catch (error) {
@@ -115,7 +115,7 @@ const follow = async (profileId: string = "0x11") => {
 
     await followTx.wait();
 
-    console.log('\nfollow: Profile followed: "', profileId, '"');
+    console.log('\nfollow: Successfully followed: "', profileId);
   } catch (error) {
     console.log("\nfollow: error", error);
   }

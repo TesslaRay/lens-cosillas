@@ -1,15 +1,15 @@
-import { lensHub } from "../lens-hub";
-
-import { lensClient } from "../lens-apollo-client";
-import { CreateUnfollowTypedData } from "../grapql/generated";
-import { UnfollowRequest } from "../grapql/lens.types";
-
 import {
   calcGas,
   getAddressFromSigner,
   signedTypeData,
   splitSignature,
 } from "../ethers.service";
+
+import { lensClient } from "../lens-apollo-client";
+import { lensHub } from "../lens-hub";
+import { CreateUnfollowTypedData } from "../grapql/generated";
+import { UnfollowRequest } from "../grapql/lens.types";
+
 import { login } from "../authentication/login";
 
 const createUnfollowTypedData = async (request: UnfollowRequest) => {
@@ -42,62 +42,25 @@ const unfollow = async (profileId: string = "0x11") => {
 
   const typedData = unfollowTypedData.typedData;
 
-  console.log("\nfollow: Signing typedData with wallet...");
-  const signature = await signedTypeData(
-    typedData.domain,
-    typedData.types,
-    typedData.value
-  );
-
-  console.log("follow: signature", signature);
-
-  // split signature
-  const { v, r, s } = splitSignature(signature);
-
-  // follow transaction
+  // unfollow transaction
   try {
-    const gasEstimated = await lensHub.estimateGas.followWithSig({
-      follower: getAddressFromSigner(),
-      profileIds: typedData.value.profileIds,
-      datas: typedData.value.datas,
-      sig: {
-        v,
-        r,
-        s,
-        deadline: typedData.value.deadline,
-      },
-    });
+    // const gasEstimated = await lensHub.estimateGas.burn(
+    //   typedData.value.tokenId
+    // );
 
-    const gas = await calcGas(gasEstimated);
+    // const gas = await calcGas(gasEstimated);
 
-    const followTx = await lensHub.followWithSig(
-      {
-        follower: getAddressFromSigner(),
-        profileIds: typedData.value.profileIds,
-        datas: typedData.value.datas,
-        sig: {
-          v,
-          r,
-          s,
-          deadline: typedData.value.deadline,
-        },
-      },
-      {
-        gasLimit: gas.gasLimit,
-        maxFeePerGas: gas.maxFeePerGas,
-        maxPriorityFeePerGas: gas.maxPriorityFeePerGas,
-      }
-    );
+    const unfollowTx = await lensHub.burn(typedData.value.tokenId);
 
-    console.log("\nfollow: followTx", followTx);
+    console.log("\nunfollow: unfollowTx", unfollowTx);
 
-    await followTx.wait();
+    await unfollowTx.wait();
 
-    console.log('\nfollow: Profile followed: "', profileId, '"');
+    console.log('\nunfollow: Successfully unfollowed: "', profileId);
 
-    return followTx.hash;
+    return unfollowTx.hash;
   } catch (error) {
-    console.log("\nfollow: error", error);
+    console.log("\nunfollow: error", error);
   }
 };
 
