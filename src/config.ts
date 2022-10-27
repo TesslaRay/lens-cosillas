@@ -10,10 +10,16 @@ const fileLensHub = fs.readFileSync(
   "utf8"
 );
 
+const fileFollowNft = fs.readFileSync(
+  path.join(__dirname, "abis/lens-follow-nft-contract-abi.json"),
+  "utf8"
+);
+
 // Global config
 export const CONFIG = {
   POLYGON_RPC: "https://polygon-rpc.com/",
   PK: process.env.PK,
   LENS_HUB_CONTRACT_ADDRESS: "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d",
   LENS_HUB_ABI: JSON.parse(fileLensHub),
+  LENS_FOLLOW_NFT_ABI: JSON.parse(fileFollowNft),
 };

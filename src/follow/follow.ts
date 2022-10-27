@@ -1,13 +1,14 @@
 import {
   calcGas,
   getAddressFromSigner,
+  getTransactionCount,
   signedTypeData,
   splitSignature,
 } from "../ethers.service";
 
 import { login } from "../authentication/login";
 
-import { changeHeaders, lensClient } from "../lens-apollo-client";
+import { lensClient } from "../lens-apollo-client";
 import { CreateFollowDataType } from "../grapql/generated";
 import { FollowRequest } from "../grapql/lens.types";
 import { lensHub } from "../lens-hub";
@@ -52,6 +53,11 @@ const followWithSig = async (profileId: string = "0x11") => {
   // split signature
   const { v, r, s } = splitSignature(signature);
 
+  // get transaction count
+  const nonce = await getTransactionCount();
+
+  console.log("\nfollow: nonce", nonce);
+
   // follow transaction
   try {
     const gasEstimated = await lensHub.estimateGas.followWithSig({
@@ -68,7 +74,7 @@ const followWithSig = async (profileId: string = "0x11") => {
 
     const gas = await calcGas(gasEstimated);
 
-    const followTx = await lensHub.followWithSig(
+    const followWithSigTx = await lensHub.followWithSig(
       {
         follower: getAddressFromSigner(),
         profileIds: typedData.value.profileIds,
@@ -87,13 +93,17 @@ const followWithSig = async (profileId: string = "0x11") => {
       }
     );
 
-    console.log("\nfollow: followTx", followTx);
+    console.log("\nfollow: followWithSigTx", followWithSigTx);
 
-    await followTx.wait();
+    setTimeout(() => {
+      console.log("\nfollow: Waiting for followWithSigTx to be mined...");
+    }, 5000);
+
+    await followWithSigTx.wait();
 
     console.log('\nfollow: Successfully followed: "', profileId);
 
-    return followTx.hash;
+    return followWithSigTx.hash;
   } catch (error) {
     console.log("\nfollow: error", error);
   }
@@ -115,16 +125,16 @@ const follow = async (profileId: string = "0x11") => {
 
     await followTx.wait();
 
-    console.log('\nfollow: Successfully followed: "', profileId);
+    console.log("\nfollow: Successfully followed: ", profileId);
   } catch (error) {
     console.log("\nfollow: error", error);
   }
 };
 
 (async () => {
-  await followWithSig("0x0f85");
+  await followWithSig("0x016305");
 })();
 
 // (async () => {
-//   await follow("0x6065");
+//   await follow("0x576b");
 // })();

@@ -2,8 +2,6 @@ import { ethers, TypedDataDomain, Wallet } from "ethers";
 
 import { CONFIG } from "./config";
 
-import { omit } from "./helpers";
-
 import axios from "axios";
 
 import { formatEther } from "./utils";
@@ -54,7 +52,7 @@ function parse(data: any) {
 
 const calcGas = async (gasEstimated: ethers.BigNumber) => {
   let gas = {
-    gasLimit: gasEstimated.mul(110).div(100),
+    gasLimit: gasEstimated, // .mul(110).div(100),
     maxFeePerGas: ethers.BigNumber.from(40000000000),
     maxPriorityFeePerGas: ethers.BigNumber.from(40000000000),
   };
@@ -78,6 +76,12 @@ const calcGas = async (gasEstimated: ethers.BigNumber) => {
   return gas;
 };
 
+const getTransactionCount = async () => {
+  const nonce = await getSigner().getTransactionCount();
+
+  return nonce;
+};
+
 export {
   getSigner,
   getAddressFromSigner,
@@ -85,4 +89,5 @@ export {
   signedTypeData,
   splitSignature,
   calcGas,
+  getTransactionCount,
 };
